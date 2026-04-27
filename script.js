@@ -151,12 +151,79 @@ const skillsGrid = document.querySelector('.skills-grid');
 if (skillsGrid) skillObserver.observe(skillsGrid);
 
 /* =============================================
-   SMOOTH DOWNLOAD BUTTON FEEDBACK
+   TOAST NOTIFICATION
+   ============================================= */
+function showToast(msg, type = 'info') {
+    const existing = document.getElementById('dl-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'dl-toast';
+    toast.innerHTML = `<i class="fas fa-${type === 'error' ? 'triangle-exclamation' : 'circle-info'}"></i> ${msg}`;
+    Object.assign(toast.style, {
+        position: 'fixed', bottom: '28px', left: '50%',
+        transform: 'translateX(-50%) translateY(20px)',
+        background: type === 'error' ? '#1a0a0a' : '#0a1a0a',
+        border: `1px solid ${type === 'error' ? '#f85149' : 'var(--accent)'}`,
+        color: type === 'error' ? '#f85149' : 'var(--accent)',
+        padding: '12px 22px', borderRadius: '9px',
+        fontFamily: 'var(--mono)', fontSize: '.85rem',
+        zIndex: '9999', opacity: '0',
+        transition: 'all .3s cubic-bezier(.4,0,.2,1)',
+        display: 'flex', alignItems: 'center', gap: '10px',
+        boxShadow: '0 8px 32px rgba(0,0,0,.5)',
+        maxWidth: '90vw', textAlign: 'center', whiteSpace: 'nowrap'
+    });
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+/* =============================================
+   DOWNLOAD BUTTON HANDLER
    ============================================= */
 document.querySelectorAll('.btn-dl').forEach(btn => {
-    btn.addEventListener('click', function () {
-        const original = this.innerHTML;
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando...';
-        setTimeout(() => { this.innerHTML = original; }, 1800);
+    btn.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        const isZip = href.endsWith('.zip');
+        const isApk = href.endsWith('.apk');
+
+        if (isZip) {
+            // ZIP direto — funciona sempre
+            const original = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+            setTimeout(() => { this.innerHTML = original; }, 2000);
+            return; // deixa o link funcionar normalmente
+        }
+
+        if (isApk) {
+            e.preventDefault();
+            const original = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+
+            // Verifica se o APK existe via HEAD request
+            fetch(href, { method: 'HEAD', redirect: 'follow' })
+                .then(res => {
+                    if (res.ok || res.status === 302) {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+                        window.location.href = href; // download direto
+                        setTimeout(() => { this.innerHTML = original; }, 2000);
+                    } else {
+                        this.innerHTML = original;
+                        showToast('APK ainda não disponível — será publicado após o primeiro build do CI.', 'error');
+                    }
+                })
+                .catch(() => {
+                    this.innerHTML = original;
+                    showToast('APK ainda não disponível — será publicado após o primeiro build do CI.', 'error');
+                });
+        }
     });
 });
