@@ -204,26 +204,9 @@ document.querySelectorAll('.btn-dl').forEach(btn => {
         }
 
         if (isApk) {
-            e.preventDefault();
             const original = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
-
-            // Verifica se o APK existe via HEAD request
-            fetch(href, { method: 'HEAD', redirect: 'follow' })
-                .then(res => {
-                    if (res.ok || res.status === 302) {
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
-                        window.location.href = href; // download direto
-                        setTimeout(() => { this.innerHTML = original; }, 2000);
-                    } else {
-                        this.innerHTML = original;
-                        showToast('APK ainda não disponível — será publicado após o primeiro build do CI.', 'error');
-                    }
-                })
-                .catch(() => {
-                    this.innerHTML = original;
-                    showToast('APK ainda não disponível — será publicado após o primeiro build do CI.', 'error');
-                });
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+            setTimeout(() => { this.innerHTML = original; }, 2000);
         }
     });
 });
