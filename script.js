@@ -2,7 +2,7 @@
    MATRIX RAIN
    ============================================= */
 const canvas = document.getElementById('matrix-canvas');
-const ctx    = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 
 function resizeCanvas() {
     canvas.width  = window.innerWidth;
@@ -11,7 +11,7 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', () => { resizeCanvas(); initMatrix(); });
 
-const CHARS = '01アイウエオカキクケコサシスセソタチツテトABCDEFGHIJKLMNOP';
+const CHARS    = '01アイウエオカキクケコサシスセソタチツテトABCDEFGHIJKLMNOP';
 const FONT_SIZE = 13;
 let columns, drops;
 
@@ -26,7 +26,6 @@ function drawMatrix() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#00ff41';
     ctx.font = `${FONT_SIZE}px 'Fira Code', monospace`;
-
     for (let i = 0; i < drops.length; i++) {
         const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
         ctx.fillText(ch, i * FONT_SIZE, drops[i] * FONT_SIZE);
@@ -48,7 +47,6 @@ const outputEl = document.getElementById('terminalOutput');
 
 function typeWriter() {
     const cmd = CMDS[cmdIdx];
-
     if (!deleting) {
         typingEl.textContent = cmd.slice(0, ++charIdx);
         if (charIdx === cmd.length) {
@@ -60,8 +58,8 @@ function typeWriter() {
     } else {
         typingEl.textContent = cmd.slice(0, --charIdx);
         if (charIdx === 0) {
-            deleting  = false;
-            cmdIdx    = (cmdIdx + 1) % CMDS.length;
+            deleting = false;
+            cmdIdx = (cmdIdx + 1) % CMDS.length;
             setTimeout(typeWriter, 550);
             return;
         }
@@ -73,9 +71,9 @@ setTimeout(typeWriter, 1000);
 /* =============================================
    NAVBAR SCROLL + ACTIVE LINK
    ============================================= */
-const navbar  = document.getElementById('navbar');
+const navbar   = document.getElementById('navbar');
 const sections = document.querySelectorAll('section[id]');
-const navAs   = document.querySelectorAll('.nav-links a[href^="#"]');
+const navAs    = document.querySelectorAll('.nav-links a[href^="#"]');
 
 window.addEventListener('scroll', () => {
     // scrolled style
@@ -115,7 +113,10 @@ navLinks.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
         navLinks.classList.remove('open');
         menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+        menuToggle.querySelectorAll('span').forEach(s => {
+            s.style.transform = '';
+            s.style.opacity   = '';
+        });
     });
 });
 
@@ -160,27 +161,39 @@ function showToast(msg, type = 'info') {
     const toast = document.createElement('div');
     toast.id = 'dl-toast';
     toast.innerHTML = `<i class="fas fa-${type === 'error' ? 'triangle-exclamation' : 'circle-info'}"></i> ${msg}`;
+
     Object.assign(toast.style, {
-        position: 'fixed', bottom: '28px', left: '50%',
-        transform: 'translateX(-50%) translateY(20px)',
-        background: type === 'error' ? '#1a0a0a' : '#0a1a0a',
-        border: `1px solid ${type === 'error' ? '#f85149' : 'var(--accent)'}`,
-        color: type === 'error' ? '#f85149' : 'var(--accent)',
-        padding: '12px 22px', borderRadius: '9px',
-        fontFamily: 'var(--mono)', fontSize: '.85rem',
-        zIndex: '9999', opacity: '0',
-        transition: 'all .3s cubic-bezier(.4,0,.2,1)',
-        display: 'flex', alignItems: 'center', gap: '10px',
-        boxShadow: '0 8px 32px rgba(0,0,0,.5)',
-        maxWidth: '90vw', textAlign: 'center', whiteSpace: 'nowrap'
+        position:     'fixed',
+        bottom:       '28px',
+        left:         '50%',
+        transform:    'translateX(-50%) translateY(20px)',
+        background:   type === 'error' ? '#1a0a0a' : '#0a1a0a',
+        border:       `1px solid ${type === 'error' ? '#f85149' : 'var(--accent)'}`,
+        color:        type === 'error' ? '#f85149' : 'var(--accent)',
+        padding:      '12px 22px',
+        borderRadius: '9px',
+        fontFamily:   'var(--mono)',
+        fontSize:     '.85rem',
+        zIndex:       '9999',
+        opacity:      '0',
+        transition:   'all .3s cubic-bezier(.4,0,.2,1)',
+        display:      'flex',
+        alignItems:   'center',
+        gap:          '10px',
+        boxShadow:    '0 8px 32px rgba(0,0,0,.5)',
+        maxWidth:     '90vw',
+        textAlign:    'center',
+        whiteSpace:   'nowrap'
     });
+
     document.body.appendChild(toast);
     requestAnimationFrame(() => {
-        toast.style.opacity = '1';
+        toast.style.opacity   = '1';
         toast.style.transform = 'translateX(-50%) translateY(0)';
     });
+
     setTimeout(() => {
-        toast.style.opacity = '0';
+        toast.style.opacity   = '0';
         toast.style.transform = 'translateX(-50%) translateY(20px)';
         setTimeout(() => toast.remove(), 300);
     }, 3500);
@@ -191,21 +204,21 @@ function showToast(msg, type = 'info') {
    ============================================= */
 document.querySelectorAll('.btn-dl').forEach(btn => {
     btn.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
+        const href  = this.getAttribute('href');
         const isZip = href.endsWith('.zip');
         const isApk = href.endsWith('.apk');
 
         if (isZip) {
-            // ZIP direto — funciona sempre
+            // ZIP direct link — always works
             const original = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
             setTimeout(() => { this.innerHTML = original; }, 2000);
-            return; // deixa o link funcionar normalmente
+            return; // let the link work normally
         }
 
         if (isApk) {
             const original = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
             setTimeout(() => { this.innerHTML = original; }, 2000);
         }
     });
