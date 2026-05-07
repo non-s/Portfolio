@@ -247,8 +247,9 @@ body {
     font-family: var(--mono); font-weight: 700; line-height: 1; height: 32px;
     display: flex; align-items: center;
 }
-.sk-kotlin,.sk-c { font-size: 1.6rem; }
-.sk-fire { font-size: 1.6rem; }
+.sk-js  { color: #f7df1e; font-size: 1.3rem; }
+.sk-api { color: var(--accent); font-size: 1.1rem; }
+.sk-c   { font-size: 1.6rem; }
 .skill-name { font-size: .85rem; font-weight: 700; color: var(--text); margin-bottom: 10px; font-family: var(--mono); }
 .skill-bar { height: 4px; background: var(--border-h); border-radius: 2px; overflow: hidden; }
 .skill-fill {
