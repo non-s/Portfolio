@@ -190,9 +190,9 @@
             </div>
             <div class="skill-card">
                 <div class="skill-icon"><i class="fas fa-database"></i></div>
-                <div class="skill-name">MySQL · SQLite</div>
-                <div class="skill-bar"><div class="skill-fill" style="--w:75%"></div></div>
-                <div class="skill-pct">75%</div>
+                <div class="skill-name">Supabase · PostgreSQL</div>
+                <div class="skill-bar"><div class="skill-fill" style="--w:82%"></div></div>
+                <div class="skill-pct">82%</div>
             </div>
             <div class="skill-card">
                 <div class="skill-icon sk-c">C</div>
@@ -210,7 +210,7 @@
         <div class="section-header fade-in">
             <span class="section-tag">$ cat /var/log/projects.log</span>
             <h2>Projetos</h2>
-            <p class="section-sub">Todos em produção · HTML · CSS · JavaScript puro · sem frameworks</p>
+            <p class="section-sub">Todos em produção · Supabase · WebRTC · JavaScript puro · sem frameworks</p>
         </div>
         <div class="projects-grid">
 
@@ -225,20 +225,20 @@
                     <div class="project-platform"><i class="fas fa-globe"></i> Web App · SPA</div>
                     <h3>TakStud</h3>
                     <p class="project-sub">Sistema de Gestão Educacional</p>
-                    <p class="project-desc">SPA de gestão educacional com controle de acesso por papel real — professores gerenciam tudo, alunos veem apenas tarefas e comunicados, admins têm operações em lote. Estado via proxy de localStorage com getter/setter. Event delegation, sem inline handlers.</p>
+                    <p class="project-desc">SPA educacional com auth real via Supabase e RBAC enforçado no banco por Row Level Security — políticas SQL, não JS. Multi-tenant por escola. Realtime via PostgreSQL LISTEN/NOTIFY: todos os professores veem atualizações sem recarregar. XSS eliminado via esc().</p>
                     <div class="project-tags">
-                        <span class="tag">Vanilla JS</span>
-                        <span class="tag">SPA</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">RLS</span>
                         <span class="tag">RBAC</span>
-                        <span class="tag">localStorage</span>
-                        <span class="tag">Event Delegation</span>
-                        <span class="tag">CSS Grid</span>
+                        <span class="tag">Realtime</span>
+                        <span class="tag">Multi-tenant</span>
                     </div>
                     <ul class="project-features">
-                        <li><i class="fas fa-check"></i> RBAC real: Professor · Aluno · Admin com UI diferente</li>
-                        <li><i class="fas fa-check"></i> CRUD: alunos, tarefas, comunicados, grade horária</li>
-                        <li><i class="fas fa-check"></i> Busca com debounce · timestamps em todos os registros</li>
-                        <li><i class="fas fa-check"></i> Atalhos: Ctrl+N · Escape · Enter · Export JSON</li>
+                        <li><i class="fas fa-check"></i> Auth email/senha + registro de escola em transação atômica</li>
+                        <li><i class="fas fa-check"></i> RLS: aluno não deleta nada — o banco rejeita, não o JS</li>
+                        <li><i class="fas fa-check"></i> CRUD async: alunos, tarefas, comunicados, grade horária</li>
+                        <li><i class="fas fa-check"></i> Realtime: atualizações ao vivo entre abas da mesma escola</li>
                     </ul>
                 </div>
                 <div class="project-actions">
@@ -262,18 +262,18 @@
                     <div class="project-platform"><i class="fas fa-globe"></i> Web App</div>
                     <h3>Uplift</h3>
                     <p class="project-sub">Frases Motivacionais</p>
-                    <p class="project-desc">App com algoritmo determinístico para "frase do dia" — seeded pelo hash da data, todos os usuários veem a mesma frase no mesmo dia sem servidor. 5 temas via CSS custom properties. Web Share API com fallback automático para clipboard. Zero dependências.</p>
+                    <p class="project-desc">Frase do dia determinística via LCG seeded hash — mesma frase para todos sem servidor. Favoritos persistidos no Supabase com autenticação anônima (sem cadastro). Submissão de novas frases pelos usuários. 5 temas via CSS custom properties.</p>
                     <div class="project-tags">
-                        <span class="tag">Vanilla JS</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">Anon Auth</span>
+                        <span class="tag">RLS</span>
                         <span class="tag">CSS Themes</span>
                         <span class="tag">Web Share API</span>
-                        <span class="tag">Date Seeding</span>
-                        <span class="tag">localStorage</span>
                     </div>
                     <ul class="project-features">
-                        <li><i class="fas fa-check"></i> Frase do dia determinística — mesma para todos, sem servidor</li>
-                        <li><i class="fas fa-check"></i> 5 temas de cor via CSS custom properties + localStorage</li>
-                        <li><i class="fas fa-check"></i> Favoritos persistidos com exportação em texto</li>
+                        <li><i class="fas fa-check"></i> Frase do dia via LCG hash — determinística, sem servidor</li>
+                        <li><i class="fas fa-check"></i> Auth anônima Supabase: favoritos persistem entre sessões</li>
+                        <li><i class="fas fa-check"></i> Modal "Sugerir frase" → tabela quote_submissions no banco</li>
                         <li><i class="fas fa-check"></i> Web Share API · fallback clipboard · teclas ← →</li>
                     </ul>
                 </div>
@@ -298,20 +298,20 @@
                     <div class="project-platform"><i class="fas fa-globe"></i> Web App · WebRTC</div>
                     <h3>P2P Chat</h3>
                     <p class="project-sub">Chat Peer-to-Peer Real no Browser</p>
-                    <p class="project-desc">Chat P2P real usando RTCPeerConnection nativo — sem servidor, sem SDK. Um peer gera código de oferta SDP, o outro responde. Após troca manual dos códigos, um DataChannel DTLS/SRTP é estabelecido direto entre os browsers via STUN.</p>
+                    <p class="project-desc">WebRTC DataChannel com Supabase Realtime Broadcast como canal de sinalização efêmero. Código de sala de 6 dígitos substitui o fluxo SDP copy-paste. Padrão request-offer resolve race condition de chegada tardia. Após DataChannel abrir, Supabase sai do loop.</p>
                     <div class="project-tags">
                         <span class="tag">WebRTC</span>
+                        <span class="tag">Supabase Realtime</span>
                         <span class="tag">RTCDataChannel</span>
                         <span class="tag">ICE · STUN</span>
-                        <span class="tag">SDP</span>
-                        <span class="tag">DTLS</span>
+                        <span class="tag">DTLS-SRTP</span>
                         <span class="tag">P2P</span>
                     </div>
                     <ul class="project-features">
-                        <li><i class="fas fa-check"></i> P2P real no browser — sem servidor, sem backend</li>
-                        <li><i class="fas fa-check"></i> RTCPeerConnection + RTCDataChannel nativos</li>
-                        <li><i class="fas fa-check"></i> Signaling manual via SDP copy-paste</li>
-                        <li><i class="fas fa-check"></i> Fallback para modo demo quando WebRTC indisponível</li>
+                        <li><i class="fas fa-check"></i> Sinalização automática via Supabase Realtime Broadcast</li>
+                        <li><i class="fas fa-check"></i> Código de 6 dígitos — sem SDP copy-paste manual</li>
+                        <li><i class="fas fa-check"></i> Padrão request-offer: funciona mesmo com chegada tardia</li>
+                        <li><i class="fas fa-check"></i> Canal P2P direto DTLS-SRTP — zero servidor após conexão</li>
                     </ul>
                 </div>
                 <div class="project-actions">
