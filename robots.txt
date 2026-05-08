@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://non-s.github.io/Portfolio/sitemap.xml
