@@ -262,3 +262,59 @@ document.querySelectorAll('.btn-dl').forEach(btn => {
         }
     });
 });
+
+/* =============================================
+   ADMIN PANEL — mensagens recebidas
+   Acesso: adicione ?admin à URL
+   SQL necessário no Supabase:
+     CREATE POLICY "mensagens_select" ON mensagens FOR SELECT USING (true);
+   ============================================= */
+(async function initAdminPanel() {
+    if (!new URLSearchParams(window.location.search).has('admin')) return;
+
+    const key = prompt('Senha do painel:');
+    if (!key) return;
+
+    const panel = document.createElement('section');
+    panel.className = 'section section-dark';
+    panel.style.cssText = 'padding-top:3rem;padding-bottom:3rem';
+    panel.innerHTML = `
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">$ SELECT * FROM mensagens ORDER BY created_at DESC;</span>
+                <h2>Mensagens <span style="font-size:1rem;color:var(--text-muted);font-weight:400">(painel admin)</span></h2>
+            </div>
+            <div id="adminMsgList" style="display:flex;flex-direction:column;gap:1rem;max-width:820px;margin:0 auto">
+                <p style="font-family:var(--mono);color:var(--text-muted)">Carregando...</p>
+            </div>
+        </div>`;
+    document.querySelector('footer').before(panel);
+
+    function hesc(s) {
+        return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    const { data, error } = await sbPortfolio
+        .from('mensagens')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    const list = document.getElementById('adminMsgList');
+    if (error) {
+        list.innerHTML = `<p style="color:#f85149;font-family:var(--mono)">Erro: ${hesc(error.message)}<br><small>Execute no Supabase: CREATE POLICY "mensagens_select" ON mensagens FOR SELECT USING (true);</small></p>`;
+        return;
+    }
+    if (!data?.length) {
+        list.innerHTML = '<p style="color:var(--text-muted);font-family:var(--mono)">Nenhuma mensagem recebida ainda.</p>';
+        return;
+    }
+    list.innerHTML = data.map(m => `
+        <div style="background:var(--bg-card);border:1px solid var(--border-h);border-radius:12px;padding:1.25rem 1.5rem">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.6rem;flex-wrap:wrap">
+                <strong style="color:var(--accent);font-size:1rem">${hesc(m.nome)}</strong>
+                <small style="color:var(--text-muted);font-family:var(--mono);white-space:nowrap">${new Date(m.created_at).toLocaleString('pt-BR')}</small>
+            </div>
+            ${m.email ? `<div style="font-family:var(--mono);font-size:.78rem;color:var(--text-muted);margin-bottom:.5rem"><i class="fas fa-envelope" style="margin-right:.4rem"></i>${hesc(m.email)}</div>` : ''}
+            <p style="color:var(--text);margin:0;line-height:1.6;white-space:pre-wrap">${hesc(m.mensagem)}</p>
+        </div>`).join('');
+})();
