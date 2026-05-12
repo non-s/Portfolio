@@ -10,7 +10,6 @@
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#00b4d8">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%230d1117'/><text x='18' y='75' font-size='70' font-family='monospace' fill='%2358a6ff' font-weight='700'>P</text></svg>">
-    <link rel="manifest" href="manifest.json">
     <meta property="og:url" content="https://non-s.github.io/Portfolio/">
     <meta property="og:image" content="https://non-s.github.io/Portfolio/icon.svg">
     <meta name="twitter:card" content="summary">
@@ -79,7 +78,7 @@
             <a href="#contact" class="btn btn-outline">
                 <i class="fas fa-terminal"></i> Contato
             </a>
-            <a href="cv.html" class="btn btn-outline" target="_blank" rel="noopener">
+            <a href="#cv" class="btn btn-outline" onclick="document.getElementById('cvOverlay').style.display='flex';return false;">
                 <i class="fas fa-file-alt"></i> Currículo
             </a>
         </div>
@@ -430,8 +429,104 @@
     </div>
 </footer>
 
+<div id="cvOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;overflow-y:auto;padding:2rem;">
+  <button onclick="document.getElementById('cvOverlay').style.display='none'" style="position:fixed;top:1rem;right:1.5rem;background:#58a6ff;color:#000;border:none;padding:.6rem 1.2rem;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;z-index:1001;">✕ Fechar</button>
+  <div class="page">
+
+    <header class="cv-header">
+        <div>
+            <div class="cv-name">Julio Fernandes</div>
+            <div class="cv-title">$ whoami --verbose</div>
+        </div>
+        <div class="cv-contacts">
+            <span>Engenheiro de Software · Instrutor de TI</span>
+            <a href="mailto:sourcenaiomiocc@gmail.com">sourcenaiomiocc@gmail.com</a>
+            <a href="https://github.com/non-s" target="_blank">github.com/non-s</a>
+            <a href="https://non-s.github.io/Portfolio/" target="_blank">non-s.github.io/Portfolio</a>
+        </div>
+    </header>
+
+    <section class="cv-section">
+        <div class="cv-section-title">$ cat sobre.txt</div>
+        <p style="font-size:.88rem;color:#adbac7">Especialista em Engenharia de Software com foco em desenvolvimento web, sistemas distribuídos e redes. Desenvolvedor autodidata com profundidade nos fundamentos. Atualmente atuando como Instrutor de Gestão de TI e Infraestrutura no setor público, combinando ensino com desenvolvimento ativo de aplicações web e sistemas P2P.</p>
+    </section>
+
+    <section class="cv-section">
+        <div class="cv-section-title">$ cat /etc/education.conf</div>
+        <div class="cv-item">
+            <div class="cv-item-header">
+                <span class="cv-item-title">Especialização em Engenharia de Software</span>
+                <span class="cv-item-date">Em andamento</span>
+            </div>
+            <div class="cv-item-sub">UNIAMÉRICA Descomplica — Pós-graduação</div>
+            <div class="cv-item-desc">Arquitetura de sistemas, metodologias ágeis e qualidade de software em ambientes de produção.</div>
+        </div>
+        <div class="cv-item">
+            <div class="cv-item-header">
+                <span class="cv-item-title">Análise e Desenvolvimento de Sistemas</span>
+                <span class="cv-item-date">Concluído</span>
+            </div>
+            <div class="cv-item-sub">UNITAU — Graduação</div>
+            <div class="cv-item-desc">Programação, banco de dados, redes e engenharia de software com base sólida em fundamentos computacionais.</div>
+        </div>
+    </section>
+
+    <section class="cv-section">
+        <div class="cv-section-title">$ ls /experience/</div>
+        <div class="cv-item">
+            <div class="cv-item-header">
+                <span class="cv-item-title">Instrutor de Gestão de TI e Infraestrutura</span>
+                <span class="cv-item-date">Atual</span>
+            </div>
+            <div class="cv-item-sub">Setor Público</div>
+            <div class="cv-item-desc">Responsável pelo ensino de tecnologia da informação, gestão de infraestrutura e redes. Desenvolvimento e manutenção de sistemas internos. Administração de servidores Linux e redes corporativas.</div>
+        </div>
+    </section>
+
+    <section class="cv-section">
+        <div class="cv-section-title">$ cat /var/log/projects.log</div>
+        <div class="cv-item">
+            <div class="cv-item-header"><span class="cv-item-title">TakStud</span><span class="cv-item-date">Em produção</span></div>
+            <div class="cv-item-desc">SPA educacional com autenticação real, RBAC via Row Level Security no Supabase, multi-tenant por escola e atualizações em tempo real.</div>
+            <div class="cv-tags"><span class="cv-tag">Supabase</span><span class="cv-tag">RLS</span><span class="cv-tag">RBAC</span><span class="cv-tag">Realtime</span><span class="cv-tag">Vanilla JS</span></div>
+        </div>
+        <div class="cv-item">
+            <div class="cv-item-header"><span class="cv-item-title">P2P Chat (CLI-P2P)</span><span class="cv-item-date">Em produção</span></div>
+            <div class="cv-item-desc">Chat WebRTC DataChannel com Supabase Realtime como sinalização efêmera. Código de sala de 6 dígitos sem cópia manual de SDP.</div>
+            <div class="cv-tags"><span class="cv-tag">WebRTC</span><span class="cv-tag">STUN/ICE</span><span class="cv-tag">DTLS-SRTP</span><span class="cv-tag">Supabase Realtime</span></div>
+        </div>
+        <div class="cv-item">
+            <div class="cv-item-header"><span class="cv-item-title">Chamada</span><span class="cv-item-date">Em produção</span></div>
+            <div class="cv-item-desc">Sistema de chamadas escolar com autenticação, RBAC, histórico e relatórios exportáveis em CSV.</div>
+            <div class="cv-tags"><span class="cv-tag">Supabase</span><span class="cv-tag">Auth</span><span class="cv-tag">Multi-tenant</span></div>
+        </div>
+        <div class="cv-item">
+            <div class="cv-item-header"><span class="cv-item-title">Uplift</span><span class="cv-item-date">Em produção</span></div>
+            <div class="cv-item-desc">App de frases motivacionais com frase do dia determinística via hash LCG, favoritos no Supabase e 5 temas CSS.</div>
+            <div class="cv-tags"><span class="cv-tag">Supabase Anon Auth</span><span class="cv-tag">CSS Custom Properties</span><span class="cv-tag">Web Share API</span></div>
+        </div>
+    </section>
+
+    <section class="cv-section">
+        <div class="cv-section-title">$ ls -la /skills/</div>
+        <div class="cv-skills-grid">
+            <div class="cv-skill-item"><div class="cv-skill-name">HTML · CSS</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:94%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">JavaScript (Vanilla)</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:88%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">Linux</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:92%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">Python</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:85%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">Supabase · PostgreSQL</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:82%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">TCP/IP · WebRTC</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:80%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">Bash · CLI</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:88%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">Git</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:87%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">C · Low Level</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:72%"></div></div></div>
+        </div>
+    </section>
+
+  </div>
+  <button onclick="window.print()" style="display:block;margin:2rem auto 0;background:#58a6ff;color:#000;border:none;padding:.7rem 1.4rem;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;">⬇ Imprimir / PDF</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});</script>
 </body>
 </html>
