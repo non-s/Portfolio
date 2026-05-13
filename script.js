@@ -4,6 +4,27 @@
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d');
 
+
+/**
+ * Handles errors: logs to console and shows user feedback via showToast.
+ * @param {Error|Object} err
+ * @param {string} [context='']
+ */
+function handleError(err, context = '') {
+  const msg = err?.message || String(err) || 'Erro inesperado';
+  console.error('[handleError]', context, err);
+  showToast(msg, 'error');
+}
+
+/**
+ * Returns true only if every provided string is non-empty after trimming.
+ * @param {...string} values
+ * @returns {boolean}
+ */
+function validateRequired(...values) {
+  return values.every(v => typeof v === 'string' && v.trim().length > 0);
+}
+
 function resizeCanvas() {
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -15,6 +36,7 @@ const CHARS    = '01アイウエオカキクケコサシスセソタチツテト
 const FONT_SIZE = 13;
 let columns, drops;
 
+/** Initializes the Matrix rain canvas animation. */
 function initMatrix() {
     columns = Math.floor(canvas.width / FONT_SIZE);
     drops   = Array.from({ length: columns }, () => Math.random() * -50);
@@ -205,6 +227,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const sbPortfolio = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.getElementById('contactForm')?.addEventListener('submit', async e => {
+  try {
     e.preventDefault();
     const nome     = document.getElementById('cfNome').value.trim();
     const email    = document.getElementById('cfEmail').value.trim();
