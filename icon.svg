@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Portfolio non-s</title>
+  <desc id="desc">Portfolio monogram icon.</desc>
+  <rect width="512" height="512" rx="96" fill="#050816"/>
+  <circle cx="256" cy="184" r="82" fill="#00ff41"/>
+  <path d="M112 438c15-82 70-130 144-130s129 48 144 130H112z" fill="#00ff41"/>
+  <path d="M155 116h202M134 396h244" stroke="#f8fafc" stroke-width="22" stroke-linecap="round" opacity=".24"/>
+</svg>
+
