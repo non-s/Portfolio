@@ -75,7 +75,7 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', () => { resizeCanvas(); initMatrix(); });
 
-const CHARS    = '01Ã£Â‚Â¢Ã£Â‚Â¤Ã£Â‚Â¦Ã£Â‚Â¨Ã£Â‚ÂªÃ£Â‚Â«Ã£Â‚Â­Ã£Â‚Â¯Ã£Â‚Â±Ã£Â‚Â³Ã£Â‚ÂµÃ£Â‚Â·Ã£Â‚Â¹Ã£Â‚Â»Ã£Â‚Â½Ã£Â‚Â¿Ã£ÂƒÂÃ£ÂƒÂ„Ã£ÂƒÂ†Ã£ÂƒÂˆABCDEFGHIJKLMNOP';
+const CHARS    = '01アイウエオカキクケコサシスセソタチツテトABCDEFGHIJKLMNOP';
 const FONT_SIZE = 13;
 let columns, drops;
 
@@ -184,7 +184,7 @@ navLinks.querySelectorAll('a').forEach(a => {
 });
 
 /* =============================================
-   INTERSECTION OBSERVER Ã¢Â€Â” fade-in
+   INTERSECTION OBSERVER — fade-in
    ============================================= */
 const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -275,7 +275,7 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
     const btn      = document.getElementById('cfBtn');
     const status   = document.getElementById('cfStatus');
     if (!nome || !mensagem) {
-        status.textContent = 'Nome e mensagem sÃƒÂ£o obrigatÃƒÂ³rios.';
+        status.textContent = 'Nome e mensagem são obrigatórios.';
         status.className = 'cf-status error';
         return;
     }
@@ -296,7 +296,7 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensagem';
     } else {
-        status.textContent = 'Ã¢ÂœÂ“ Mensagem enviada! Responderei em breve.';
+        status.textContent = '✓ Mensagem enviada! Responderei em breve.';
         status.className = 'cf-status';
         e.target.reset();
         btn.innerHTML = '<i class="fas fa-check"></i> Enviado!';
