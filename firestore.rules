@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email in ['sourcenaiomiocc@gmail.com'];
+    }
+
+    match /portfolio_mensagens/{messageId} {
+      allow create: if request.resource.data.nome is string
+        && request.resource.data.nome.size() >= 1
+        && request.resource.data.nome.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 240
+        && request.resource.data.mensagem is string
+        && request.resource.data.mensagem.size() >= 1
+        && request.resource.data.mensagem.size() <= 3000;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+  }
+}

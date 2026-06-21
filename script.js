@@ -1,3 +1,46 @@
+﻿import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
+import {
+    addDoc,
+    collection,
+    getDocs,
+    getFirestore,
+    orderBy,
+    query,
+    serverTimestamp,
+} from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
+import { firebaseConfig } from './firebase-config.js';
+
+const FIREBASE_CONFIGURED = firebaseConfig?.apiKey && !firebaseConfig.apiKey.includes('REPLACE_');
+let firebaseAuth = null;
+let firestoreDb = null;
+
+if (FIREBASE_CONFIGURED) {
+    const firebaseApp = initializeApp(firebaseConfig);
+    firebaseAuth = getAuth(firebaseApp);
+    firestoreDb = getFirestore(firebaseApp);
+}
+
+async function saveContactMessage(payload) {
+    if (!FIREBASE_CONFIGURED) throw new Error('Firebase ainda nao configurado.');
+    await addDoc(collection(firestoreDb, 'portfolio_mensagens'), {
+        ...payload,
+        created_at: serverTimestamp(),
+    });
+}
+
+async function loadContactMessages() {
+    if (!FIREBASE_CONFIGURED) throw new Error('Firebase ainda nao configurado.');
+    if (!firebaseAuth.currentUser) {
+        await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
+    }
+    const snapshot = await getDocs(query(
+        collection(firestoreDb, 'portfolio_mensagens'),
+        orderBy('created_at', 'desc'),
+    ));
+    return snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
+}
+
 /* =============================================
    MATRIX RAIN
    ============================================= */
@@ -32,7 +75,7 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', () => { resizeCanvas(); initMatrix(); });
 
-const CHARS    = '01ã¢ã¤ã¦ã¨ãªã«ã­ã¯ã±ã³ãµã·ã¹ã»ã½ã¿ããããABCDEFGHIJKLMNOP';
+const CHARS    = '01Ã£Â‚Â¢Ã£Â‚Â¤Ã£Â‚Â¦Ã£Â‚Â¨Ã£Â‚ÂªÃ£Â‚Â«Ã£Â‚Â­Ã£Â‚Â¯Ã£Â‚Â±Ã£Â‚Â³Ã£Â‚ÂµÃ£Â‚Â·Ã£Â‚Â¹Ã£Â‚Â»Ã£Â‚Â½Ã£Â‚Â¿Ã£ÂƒÂÃ£ÂƒÂ„Ã£ÂƒÂ†Ã£ÂƒÂˆABCDEFGHIJKLMNOP';
 const FONT_SIZE = 13;
 let columns, drops;
 
@@ -141,7 +184,7 @@ navLinks.querySelectorAll('a').forEach(a => {
 });
 
 /* =============================================
-   INTERSECTION OBSERVER â fade-in
+   INTERSECTION OBSERVER Ã¢Â€Â” fade-in
    ============================================= */
 const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -220,11 +263,8 @@ function showToast(msg, type = 'info') {
 }
 
 /* =============================================
-   SUPABASE â CONTACT FORM
+   FIREBASE CONTACT FORM
    ============================================= */
-const SUPABASE_URL      = 'https://bvquyfzllqnbfxncsacn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2cXV5ZnpsbHFuYmZ4bmNzYWNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxODU1MzQsImV4cCI6MjA5Mzc2MTUzNH0.xa_rs4bVLoTv58P7U8rDOaPjo1Dqt60q8cR-IWFpbug';
-const sbPortfolio = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.getElementById('contactForm')?.addEventListener('submit', async e => {
   try {
@@ -235,7 +275,7 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
     const btn      = document.getElementById('cfBtn');
     const status   = document.getElementById('cfStatus');
     if (!nome || !mensagem) {
-        status.textContent = 'Nome e mensagem sÃ£o obrigatÃ³rios.';
+        status.textContent = 'Nome e mensagem sÃƒÂ£o obrigatÃƒÂ³rios.';
         status.className = 'cf-status error';
         return;
     }
@@ -243,14 +283,20 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     status.textContent = '';
     status.className = 'cf-status';
-    const { error } = await sbPortfolio.from('portfolio_mensagens').insert({ nome, email, mensagem });
-    if (error) {
+    let sent = false;
+    try {
+        await saveContactMessage({ nome, email, mensagem });
+        sent = true;
+    } catch (err) {
+        handleError(err, 'saveContactMessage');
+    }
+    if (!sent) {
         status.textContent = 'Erro ao enviar. Tente novamente.';
         status.className = 'cf-status error';
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensagem';
     } else {
-        status.textContent = 'â Mensagem enviada! Responderei em breve.';
+        status.textContent = 'Ã¢ÂœÂ“ Mensagem enviada! Responderei em breve.';
         status.className = 'cf-status';
         e.target.reset();
         btn.innerHTML = '<i class="fas fa-check"></i> Enviado!';
@@ -288,16 +334,12 @@ document.querySelectorAll('.btn-dl').forEach(btn => {
 });
 
 /* =============================================
-   ADMIN PANEL â mensagens recebidas
-   Acesso: adicione ?admin Ã  URL
-   SQL necessÃ¡rio no Supabase:
-     CREATE POLICY "mensagens_select" ON mensagens FOR SELECT USING (true);
+   ADMIN PANEL - mensagens recebidas
+   Acesso: adicione ?admin na URL.
+   As leituras sao protegidas pelas Firebase Security Rules.
    ============================================= */
 (async function initAdminPanel() {
     if (!new URLSearchParams(window.location.search).has('admin')) return;
-
-    const key = prompt('Senha do painel:');
-    if (!key) return;
 
     const panel = document.createElement('section');
     panel.className = 'section section-dark';
@@ -305,7 +347,7 @@ document.querySelectorAll('.btn-dl').forEach(btn => {
     panel.innerHTML = `
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">$ SELECT * FROM mensagens ORDER BY created_at DESC;</span>
+                <span class="section-tag">$ firestore portfolio_mensagens order by created_at desc</span>
                 <h2>Mensagens <span style="font-size:1rem;color:var(--text-muted);font-weight:400">(painel admin)</span></h2>
             </div>
             <div id="adminMsgList" style="display:flex;flex-direction:column;gap:1rem;max-width:820px;margin:0 auto">
@@ -318,14 +360,22 @@ document.querySelectorAll('.btn-dl').forEach(btn => {
         return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
-    const { data, error } = await sbPortfolio
-        .from('portfolio_mensagens')
-        .select('*')
-        .order('created_at', { ascending: false });
+    function formatMessageDate(value) {
+        const date = value?.toDate ? value.toDate() : new Date(value || Date.now());
+        return date.toLocaleString('pt-BR');
+    }
+
+    let data = [];
+    let error = null;
+    try {
+        data = await loadContactMessages();
+    } catch (err) {
+        error = err;
+    }
 
     const list = document.getElementById('adminMsgList');
     if (error) {
-        list.innerHTML = `<p style="color:#f85149;font-family:var(--mono)">Erro: ${hesc(error.message)}<br><small>Execute no Supabase: CREATE POLICY "mensagens_select" ON mensagens FOR SELECT USING (true);</small></p>`;
+        list.innerHTML = `<p style="color:#f85149;font-family:var(--mono)">Erro: ${hesc(error.message)}<br><small>Entre com um Google autorizado e publique as regras do Firestore.</small></p>`;
         return;
     }
     if (!data?.length) {
@@ -336,9 +386,10 @@ document.querySelectorAll('.btn-dl').forEach(btn => {
         <div style="background:var(--bg-card);border:1px solid var(--border-h);border-radius:12px;padding:1.25rem 1.5rem">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.6rem;flex-wrap:wrap">
                 <strong style="color:var(--accent);font-size:1rem">${hesc(m.nome)}</strong>
-                <small style="color:var(--text-muted);font-family:var(--mono);white-space:nowrap">${new Date(m.created_at).toLocaleString('pt-BR')}</small>
+                <small style="color:var(--text-muted);font-family:var(--mono);white-space:nowrap">${formatMessageDate(m.created_at)}</small>
             </div>
             ${m.email ? `<div style="font-family:var(--mono);font-size:.78rem;color:var(--text-muted);margin-bottom:.5rem"><i class="fas fa-envelope" style="margin-right:.4rem"></i>${hesc(m.email)}</div>` : ''}
             <p style="color:var(--text);margin:0;line-height:1.6;white-space:pre-wrap">${hesc(m.mensagem)}</p>
         </div>`).join('');
 })();
+

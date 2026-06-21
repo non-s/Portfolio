@@ -200,7 +200,7 @@
             </div>
             <div class="skill-card">
                 <div class="skill-icon"><i class="fas fa-database"></i></div>
-                <div class="skill-name">Supabase · PostgreSQL</div>
+                <div class="skill-name">Firebase · Firestore</div>
                 <div class="skill-bar"><div class="skill-fill" style="--w:82%"></div></div>
                 <div class="skill-pct">82%</div>
             </div>
@@ -220,7 +220,7 @@
         <div class="section-header fade-in">
             <span class="section-tag">$ cat /var/log/projects.log</span>
             <h2>Projetos</h2>
-            <p class="section-sub">Todos em produção · Supabase · WebRTC · Vanilla JavaScript · sem frameworks</p>
+            <p class="section-sub">Todos em produção · Firebase · WebRTC · Vanilla JavaScript · sem frameworks</p>
         </div>
         <div class="projects-grid">
 
@@ -235,18 +235,18 @@
                     <div class="project-platform"><i class="fas fa-globe"></i> Web App · SPA</div>
                     <h3>TakStud</h3>
                     <p class="project-sub">Sistema de Gestão Educacional</p>
-                    <p class="project-desc">SPA educacional com autenticação real via Supabase e RBAC aplicado no banco via Row Level Security — políticas SQL, não JS. Multi-tenant por escola. Tempo real via PostgreSQL LISTEN/NOTIFY: todos os professores veem atualizações sem recarregar. XSS eliminado via esc().</p>
+                    <p class="project-desc">SPA educacional com autenticação real via Firebase e RBAC aplicado nas Security Rules. Multi-tenant por escola. Tempo real via Firestore: professores veem atualizações sem recarregar. XSS eliminado via esc().</p>
                     <div class="project-tags">
-                        <span class="tag">Supabase</span>
-                        <span class="tag">PostgreSQL</span>
-                        <span class="tag">RLS</span>
+                        <span class="tag">Firebase</span>
+                        <span class="tag">Firestore</span>
+                        <span class="tag">Rules</span>
                         <span class="tag">RBAC</span>
                         <span class="tag">Realtime</span>
                         <span class="tag">Multi-tenant</span>
                     </div>
                     <ul class="project-features">
                         <li><i class="fas fa-check"></i> Auth por e-mail/senha + registro de escola em transação atômica</li>
-                        <li><i class="fas fa-check"></i> RLS: aluno não exclui nada — o banco rejeita, não o JS</li>
+                        <li><i class="fas fa-check"></i> Security Rules: aluno não exclui nada — o servidor rejeita, não o JS</li>
                         <li><i class="fas fa-check"></i> CRUD assíncrono: alunos, tarefas, avisos, horários</li>
                         <li><i class="fas fa-check"></i> Tempo real: atualizações ao vivo entre abas da mesma escola</li>
                     </ul>
@@ -272,17 +272,17 @@
                     <div class="project-platform"><i class="fas fa-globe"></i> Web App</div>
                     <h3>Uplift</h3>
                     <p class="project-sub">Frases Motivacionais</p>
-                    <p class="project-desc">Frase do dia determinística via hash LCG com semente — mesma frase para todos, sem servidor. Favoritos salvos no Supabase com autenticação anônima (sem cadastro). Envio de frases pelo usuário. 5 temas via propriedades CSS customizadas.</p>
+                    <p class="project-desc">Frase do dia determinística via hash LCG com semente — mesma frase para todos, sem servidor. Favoritos salvos no Firebase com autenticação anônima (sem cadastro). Envio de frases pelo usuário. 5 temas via propriedades CSS customizadas.</p>
                     <div class="project-tags">
-                        <span class="tag">Supabase</span>
+                        <span class="tag">Firebase</span>
                         <span class="tag">Anon Auth</span>
-                        <span class="tag">RLS</span>
+                        <span class="tag">Rules</span>
                         <span class="tag">CSS Themes</span>
                         <span class="tag">Web Share API</span>
                     </div>
                     <ul class="project-features">
                         <li><i class="fas fa-check"></i> Frase do dia via hash LCG — determinística, sem servidor</li>
-                        <li><i class="fas fa-check"></i> Auth anônima Supabase: favoritos persistem entre sessões</li>
+                        <li><i class="fas fa-check"></i> Auth anônima Firebase: favoritos persistem entre sessões</li>
                         <li><i class="fas fa-check"></i> Modal "Sugerir frase" → tabela quote_submissions no banco</li>
                         <li><i class="fas fa-check"></i> Web Share API · fallback clipboard · teclas ← →</li>
                     </ul>
@@ -308,17 +308,17 @@
                     <div class="project-platform"><i class="fas fa-globe"></i> Web App · WebRTC</div>
                     <h3>P2P Chat</h3>
                     <p class="project-sub">Chat Peer-to-Peer Real no Navegador</p>
-                    <p class="project-desc">WebRTC DataChannel com Supabase Realtime Broadcast como canal de sinalização efêmero. Código de sala de 6 dígitos substitui o fluxo de cópia de SDP. Padrão request-offer resolve a condição de corrida de chegada tardia. Após o DataChannel abrir, o Supabase sai do loop.</p>
+                    <p class="project-desc">WebRTC DataChannel com Firebase Realtime Database como canal de sinalização efêmero. Código de sala de 6 dígitos substitui o fluxo de cópia de SDP. Padrão request-offer resolve a condição de corrida de chegada tardia. Após o DataChannel abrir, o Firebase sai do loop.</p>
                     <div class="project-tags">
                         <span class="tag">WebRTC</span>
-                        <span class="tag">Supabase Realtime</span>
+                        <span class="tag">Firebase RTDB</span>
                         <span class="tag">RTCDataChannel</span>
                         <span class="tag">ICE · STUN</span>
                         <span class="tag">DTLS-SRTP</span>
                         <span class="tag">P2P</span>
                     </div>
                     <ul class="project-features">
-                        <li><i class="fas fa-check"></i> Sinalização automática via Supabase Realtime Broadcast</li>
+                        <li><i class="fas fa-check"></i> Sinalização automática via Firebase Realtime Database</li>
                         <li><i class="fas fa-check"></i> Código de 6 dígitos — sem cópia manual de SDP</li>
                         <li><i class="fas fa-check"></i> Padrão request-offer: funciona mesmo com chegada tardia</li>
                         <li><i class="fas fa-check"></i> Canal P2P DTLS-SRTP direto — zero servidor após conexão</li>
@@ -487,23 +487,23 @@
         <div class="cv-section-title">$ cat /var/log/projects.log</div>
         <div class="cv-item">
             <div class="cv-item-header"><span class="cv-item-title">TakStud</span><span class="cv-item-date">Em produção</span></div>
-            <div class="cv-item-desc">SPA educacional com autenticação real, RBAC via Row Level Security no Supabase, multi-tenant por escola e atualizações em tempo real.</div>
-            <div class="cv-tags"><span class="cv-tag">Supabase</span><span class="cv-tag">RLS</span><span class="cv-tag">RBAC</span><span class="cv-tag">Realtime</span><span class="cv-tag">Vanilla JS</span></div>
+            <div class="cv-item-desc">SPA educacional com autenticação real, RBAC via Firebase Security Rules, multi-tenant por escola e atualizações em tempo real.</div>
+            <div class="cv-tags"><span class="cv-tag">Firebase</span><span class="cv-tag">Rules</span><span class="cv-tag">RBAC</span><span class="cv-tag">Realtime</span><span class="cv-tag">Vanilla JS</span></div>
         </div>
         <div class="cv-item">
             <div class="cv-item-header"><span class="cv-item-title">P2P Chat (CLI-P2P)</span><span class="cv-item-date">Em produção</span></div>
-            <div class="cv-item-desc">Chat WebRTC DataChannel com Supabase Realtime como sinalização efêmera. Código de sala de 6 dígitos sem cópia manual de SDP.</div>
-            <div class="cv-tags"><span class="cv-tag">WebRTC</span><span class="cv-tag">STUN/ICE</span><span class="cv-tag">DTLS-SRTP</span><span class="cv-tag">Supabase Realtime</span></div>
+            <div class="cv-item-desc">Chat WebRTC DataChannel com Firebase Realtime Database como sinalização efêmera. Código de sala de 6 dígitos sem cópia manual de SDP.</div>
+            <div class="cv-tags"><span class="cv-tag">WebRTC</span><span class="cv-tag">STUN/ICE</span><span class="cv-tag">DTLS-SRTP</span><span class="cv-tag">Firebase RTDB</span></div>
         </div>
         <div class="cv-item">
             <div class="cv-item-header"><span class="cv-item-title">Chamada</span><span class="cv-item-date">Em produção</span></div>
             <div class="cv-item-desc">Sistema de chamadas escolar com autenticação, RBAC, histórico e relatórios exportáveis em CSV.</div>
-            <div class="cv-tags"><span class="cv-tag">Supabase</span><span class="cv-tag">Auth</span><span class="cv-tag">Multi-tenant</span></div>
+            <div class="cv-tags"><span class="cv-tag">Firebase</span><span class="cv-tag">Auth</span><span class="cv-tag">Multi-tenant</span></div>
         </div>
         <div class="cv-item">
             <div class="cv-item-header"><span class="cv-item-title">Uplift</span><span class="cv-item-date">Em produção</span></div>
-            <div class="cv-item-desc">App de frases motivacionais com frase do dia determinística via hash LCG, favoritos no Supabase e 5 temas CSS.</div>
-            <div class="cv-tags"><span class="cv-tag">Supabase Anon Auth</span><span class="cv-tag">CSS Custom Properties</span><span class="cv-tag">Web Share API</span></div>
+            <div class="cv-item-desc">App de frases motivacionais com frase do dia determinística via hash LCG, favoritos no Firebase e 5 temas CSS.</div>
+            <div class="cv-tags"><span class="cv-tag">Firebase Anon Auth</span><span class="cv-tag">CSS Custom Properties</span><span class="cv-tag">Web Share API</span></div>
         </div>
     </section>
 
@@ -514,7 +514,7 @@
             <div class="cv-skill-item"><div class="cv-skill-name">JavaScript (Vanilla)</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:88%"></div></div></div>
             <div class="cv-skill-item"><div class="cv-skill-name">Linux</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:92%"></div></div></div>
             <div class="cv-skill-item"><div class="cv-skill-name">Python</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:85%"></div></div></div>
-            <div class="cv-skill-item"><div class="cv-skill-name">Supabase · PostgreSQL</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:82%"></div></div></div>
+            <div class="cv-skill-item"><div class="cv-skill-name">Firebase · Firestore</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:82%"></div></div></div>
             <div class="cv-skill-item"><div class="cv-skill-name">TCP/IP · WebRTC</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:80%"></div></div></div>
             <div class="cv-skill-item"><div class="cv-skill-name">Bash · CLI</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:88%"></div></div></div>
             <div class="cv-skill-item"><div class="cv-skill-name">Git</div><div class="cv-skill-bar"><div class="cv-skill-fill" style="width:87%"></div></div></div>
@@ -526,7 +526,6 @@
   <button onclick="window.print()" style="display:block;margin:2rem auto 0;background:#58a6ff;color:#000;border:none;padding:.7rem 1.4rem;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;">⬇ Imprimir / PDF</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
