@@ -5,6 +5,7 @@ import {
     collection,
     getDocs,
     getFirestore,
+    limit as firestoreLimit,
     orderBy,
     query,
     serverTimestamp,
@@ -37,6 +38,7 @@ async function loadContactMessages() {
     const snapshot = await getDocs(query(
         collection(firestoreDb, 'portfolio_mensagens'),
         orderBy('created_at', 'desc'),
+        firestoreLimit(200),
     ));
     return snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
 }
