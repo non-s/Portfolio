@@ -406,10 +406,11 @@
 
         <form class="contact-form fade-in" id="contactForm" novalidate>
             <div class="cf-row">
-                <input class="cf-input" id="cfNome" type="text" placeholder="Seu nome" required>
-                <input class="cf-input" id="cfEmail" type="email" placeholder="Seu e-mail (opcional)">
+                <input class="cf-input" id="cfNome" type="text" placeholder="Seu nome" maxlength="80" autocomplete="name" required>
+                <input class="cf-input" id="cfEmail" type="email" placeholder="Seu e-mail (opcional)" maxlength="240" autocomplete="email">
             </div>
-            <textarea class="cf-input" id="cfMsg" rows="5" placeholder="Sua mensagem..." required></textarea>
+            <input class="cf-hp" id="cfCompany" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <textarea class="cf-input" id="cfMsg" rows="5" placeholder="Sua mensagem..." maxlength="2000" required></textarea>
             <button class="btn btn-primary cf-btn" id="cfBtn" type="submit">
                 <i class="fas fa-paper-plane"></i> Enviar Mensagem
             </button>

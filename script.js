@@ -1,5 +1,5 @@
 ﻿import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInAnonymously, signInWithPopup } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
 import {
     addDoc,
     collection,
@@ -13,6 +13,14 @@ import {
 import { firebaseConfig } from './firebase-config.js';
 
 const FIREBASE_CONFIGURED = firebaseConfig?.apiKey && !firebaseConfig.apiKey.includes('REPLACE_');
+const CONTACT_LIMITS = Object.freeze({
+    name: 80,
+    email: 240,
+    message: 2000,
+    cooldownMs: 60000,
+});
+const CONTACT_LAST_SENT_KEY = 'portfolio_contact_last_sent_at';
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 let firebaseAuth = null;
 let firestoreDb = null;
 
@@ -22,17 +30,24 @@ if (FIREBASE_CONFIGURED) {
     firestoreDb = getFirestore(firebaseApp);
 }
 
-async function saveContactMessage(payload) {
+async function ensureContactAuth() {
     if (!FIREBASE_CONFIGURED) throw new Error('Firebase ainda nao configurado.');
+    if (!firebaseAuth.currentUser) await signInAnonymously(firebaseAuth);
+    return firebaseAuth.currentUser;
+}
+
+async function saveContactMessage(payload) {
+    const user = await ensureContactAuth();
     await addDoc(collection(firestoreDb, 'portfolio_mensagens'), {
         ...payload,
+        submitted_by: user.uid,
         created_at: serverTimestamp(),
     });
 }
 
 async function loadContactMessages() {
     if (!FIREBASE_CONFIGURED) throw new Error('Firebase ainda nao configurado.');
-    if (!firebaseAuth.currentUser) {
+    if (!firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous) {
         await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
     }
     const snapshot = await getDocs(query(
@@ -225,7 +240,11 @@ function showToast(msg, type = 'info') {
 
     const toast = document.createElement('div');
     toast.id = 'dl-toast';
-    toast.innerHTML = `<i class="fas fa-${type === 'error' ? 'triangle-exclamation' : 'circle-info'}"></i> ${msg}`;
+    const icon = document.createElement('i');
+    icon.className = `fas fa-${type === 'error' ? 'triangle-exclamation' : 'circle-info'}`;
+    const text = document.createElement('span');
+    text.textContent = msg;
+    toast.append(icon, text);
 
     Object.assign(toast.style, {
         position:     'fixed',
@@ -268,44 +287,78 @@ function showToast(msg, type = 'info') {
    FIREBASE CONTACT FORM
    ============================================= */
 
+function normalizeContactForm() {
+    return {
+        nome: document.getElementById('cfNome').value.trim().slice(0, CONTACT_LIMITS.name),
+        email: document.getElementById('cfEmail').value.trim().slice(0, CONTACT_LIMITS.email),
+        mensagem: document.getElementById('cfMsg').value.trim().slice(0, CONTACT_LIMITS.message),
+        honeypot: document.getElementById('cfCompany')?.value.trim() || '',
+    };
+}
+
+function contactCooldownRemaining() {
+    const last = Number(localStorage.getItem(CONTACT_LAST_SENT_KEY) || 0);
+    return Math.max(0, CONTACT_LIMITS.cooldownMs - (Date.now() - last));
+}
+
+function setContactStatus(status, message, isError = false) {
+    if (!status) return;
+    status.textContent = message;
+    status.className = `cf-status${isError ? ' error' : ''}`;
+}
+
 document.getElementById('contactForm')?.addEventListener('submit', async e => {
   try {
     e.preventDefault();
-    const nome     = document.getElementById('cfNome').value.trim();
-    const email    = document.getElementById('cfEmail').value.trim();
-    const mensagem = document.getElementById('cfMsg').value.trim();
+    const { nome, email, mensagem, honeypot } = normalizeContactForm();
     const btn      = document.getElementById('cfBtn');
     const status   = document.getElementById('cfStatus');
-    if (!nome || !mensagem) {
-        status.textContent = 'Nome e mensagem são obrigatórios.';
-        status.className = 'cf-status error';
+    if (honeypot) {
+        setContactStatus(status, 'Mensagem enviada.');
+        e.target.reset();
+        return;
+    }
+    if (!validateRequired(nome, mensagem)) {
+        setContactStatus(status, 'Nome e mensagem são obrigatórios.', true);
+        return;
+    }
+    if (email && !EMAIL_PATTERN.test(email)) {
+        setContactStatus(status, 'Digite um e-mail válido ou deixe o campo vazio.', true);
+        return;
+    }
+    const cooldown = contactCooldownRemaining();
+    if (cooldown > 0) {
+        setContactStatus(status, `Aguarde ${Math.ceil(cooldown / 1000)}s antes de enviar outra mensagem.`, true);
         return;
     }
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-    status.textContent = '';
-    status.className = 'cf-status';
+    setContactStatus(status, '');
     let sent = false;
     try {
-        await saveContactMessage({ nome, email, mensagem });
+        await saveContactMessage({
+            nome,
+            email,
+            mensagem,
+            page_path: location.pathname.slice(0, 120),
+        });
         sent = true;
+        localStorage.setItem(CONTACT_LAST_SENT_KEY, String(Date.now()));
     } catch (err) {
         handleError(err, 'saveContactMessage');
     }
     if (!sent) {
-        status.textContent = 'Erro ao enviar. Tente novamente.';
-        status.className = 'cf-status error';
+        setContactStatus(status, 'Erro ao enviar. Tente novamente.', true);
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensagem';
     } else {
-        status.textContent = '✓ Mensagem enviada! Responderei em breve.';
-        status.className = 'cf-status';
+        setContactStatus(status, '✓ Mensagem enviada! Responderei em breve.');
         e.target.reset();
         btn.innerHTML = '<i class="fas fa-check"></i> Enviado!';
         setTimeout(() => {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensagem';
-            status.textContent = '';
+            setContactStatus(status, '');
         }, 3500);
     }
   } catch(err) { handleError(err, 'contactForm'); }
